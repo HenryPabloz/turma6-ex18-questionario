@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responder formulário — Ateliê de Questionários</title>
+  <meta name="description" content="Responda ao formulário: informe seu nome, e-mail e as respostas de cada pergunta.">
+  <link rel="stylesheet" href="../CSS/estilo.css">
+</head>
+<body>
+  <a href="#conteudo-principal" class="pular-navegacao">Pular para o conteúdo principal</a>
+
+  <div class="pagina vitrine">
+    <!-- Atmosfera decorativa: manchas de gradiente flutuantes, puramente visuais -->
+    <div class="vitrine__atmosfera" aria-hidden="true">
+      <span class="vitrine__mancha vitrine__mancha--1"></span>
+      <span class="vitrine__mancha vitrine__mancha--2"></span>
+      <span class="vitrine__mancha vitrine__mancha--3"></span>
+    </div>
+
+    <header class="trilho-nav">
+      <a href="index.html" class="trilho-nav__marca">
+        <span class="trilho-nav__marca-selo">FICHÁRIO</span>
+        <span class="trilho-nav__marca-titulo">Ateliê de Questionários</span>
+      </a>
+    </header>
+
+    <main id="conteudo-principal">
+      <div class="vitrine__cabecalho">
+        <span class="vitrine__eyebrow" id="formulario-eyebrow">Formulário público</span>
+        <h1 class="vitrine__titulo" id="formulario-titulo-exibicao">Carregando formulário…</h1>
+        <p class="vitrine__descricao" id="formulario-descricao-exibicao"></p>
+      </div>
+
+      <!-- Estado de indisponibilidade: exibido quando o link é inválido, o formulário não
+           está publicado, ou a data atual está fora de dataInicio–dataFim -->
+      <div id="alerta-formulario-indisponivel" class="vitrine__cartao vitrine__cartao--centralizado" hidden>
+        <span class="carimbo-indisponivel">Formulário indisponível</span>
+        <p id="texto-formulario-indisponivel">
+          Este formulário foi encerrado ou ainda não está disponível para respostas.
+          Fale com quem enviou o link para mais informações.
+        </p>
+      </div>
+
+      <div class="vitrine__cartao" id="cartao-formulario-resposta">
+
+        <!-- Resumo de erros de validação — foque o primeiro campo inválido ao exibir -->
+        <div id="alerta-erro-obrigatorias" class="alerta alerta--erro" role="alert" hidden>
+          <span aria-hidden="true">⚠</span>
+          <div>
+            <strong id="titulo-erro-obrigatorias">Faltam respostas obrigatórias</strong>
+            <ul id="lista-erros-obrigatorias"></ul>
+          </div>
+        </div>
+
+        <!-- Confirmação de envio — exiba no lugar do formulário após o sucesso -->
+        <div id="alerta-envio-sucesso" class="alerta alerta--info" role="status" hidden>
+          <span aria-hidden="true">✓</span>
+          <div><strong>Resposta enviada!</strong> Obrigado por participar.</div>
+        </div>
+
+        <form id="form-resposta" novalidate>
+          <fieldset class="campo-grupo">
+            <legend>Seus dados</legend>
+
+            <div class="campo">
+              <label class="campo__rotulo" for="respondente-nome">
+                Nome <span class="campo__obrigatorio" aria-hidden="true">*</span>
+              </label>
+              <input type="text" id="respondente-nome" name="respondente-nome" class="entrada" required aria-required="true" autocomplete="name" placeholder="Seu nome completo">
+              <span class="campo__erro" id="erro-respondente-nome"></span>
+            </div>
+
+            <div class="campo campo--sem-margem">
+              <label class="campo__rotulo" for="respondente-email">
+                E-mail <span class="campo__obrigatorio" aria-hidden="true">*</span>
+              </label>
+              <input type="email" id="respondente-email" name="respondente-email" class="entrada" required aria-required="true" autocomplete="email" spellcheck="false" inputmode="email" placeholder="voce@email.com">
+              <span class="campo__ajuda">Usado apenas para impedir respostas duplicadas neste formulário.</span>
+              <span class="campo__erro" id="erro-respondente-email"></span>
+            </div>
+          </fieldset>
+
+          <!-- Container onde cada pergunta do formulário é renderizada, uma por tipo, por responder.js -->
+          <div id="perguntas-resposta-container"></div>
+
+          <div class="selo-envio">
+            <button type="submit" id="btn-enviar-resposta" class="botao botao--primario">Enviar resposta</button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer class="rodape">
+      Ateliê de Questionários — dados servidos por json-server.
+    </footer>
+  </div>
+
+  <script src="../JS/utils.js"></script>
+  <script src="../JS/responder.js"></script>
+</body>
+</html>

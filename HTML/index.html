@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ateliê de Questionários</title>
+    <meta name="description"
+        content="Sistema de cadastro e aplicação de questionários — banco de perguntas, montagem de formulários e coleta de respostas.">
+    <link rel="stylesheet" href="../CSS/estilo.css">
+</head>
+
+<body>
+    <a href="#conteudo-principal" class="pular-navegacao">Pular para o conteúdo principal</a>
+
+    <div class="pagina">
+        <header class="trilho-nav">
+            <a href="index.html" class="trilho-nav__marca">
+                <span class="trilho-nav__marca-selo">FICHÁRIO</span>
+                <span class="trilho-nav__marca-titulo">Ateliê de Questionários</span>
+            </a>
+            <nav aria-label="Navegação principal">
+                <ul class="trilho-nav__abas">
+                    <li><a href="index.html" aria-current="page">Início</a></li>
+                    <li><a href="perguntas.html">Perguntas</a></li>
+                    <li><a href="formularios.html">Formulários</a></li>
+                    <li><a href="respostas.html">Respostas</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main id="conteudo-principal">
+            <section class="hero">
+                <span class="hero__eyebrow">Sistema de cadastro de questionários</span>
+                <h1>Um fichário vivo para suas perguntas, formulários e respostas.</h1>
+                <p>
+                    Cadastre perguntas reutilizáveis, monte formulários a partir delas e acompanhe,
+                    registro a registro, quem respondeu o quê — tudo com a organização de um
+                    catálogo de biblioteca.
+                </p>
+            </section>
+
+            <section aria-label="Áreas do sistema" class="grade-gavetas">
+                <a class="gaveta" href="perguntas.html">
+                    <span class="gaveta__numero">GAVETA 01 · BANCO DE PERGUNTAS</span>
+                    <h2 class="gaveta__titulo">Perguntas</h2>
+                    <p class="gaveta__texto">
+                        Cadastre, edite e organize perguntas de múltipla escolha, checkbox, texto
+                        curto ou texto longo — prontas para compor qualquer formulário.
+                    </p>
+                    <span class="gaveta__ir">Abrir gaveta <span aria-hidden="true">→</span></span>
+                </a>
+
+                <a class="gaveta" href="formularios.html">
+                    <span class="gaveta__numero">GAVETA 02 · MONTAGEM</span>
+                    <h2 class="gaveta__titulo">Formulários</h2>
+                    <p class="gaveta__texto">
+                        Combine perguntas já cadastradas, defina título, vigência e status —
+                        de rascunho a publicado.
+                    </p>
+                    <span class="gaveta__ir">Abrir gaveta <span aria-hidden="true">→</span></span>
+                </a>
+
+                <a class="gaveta" href="respostas.html">
+                    <span class="gaveta__numero">GAVETA 03 · REGISTROS</span>
+                    <h2 class="gaveta__titulo">Respostas</h2>
+                    <p class="gaveta__texto">
+                        Consulte, por formulário, cada pessoa respondente e as respostas que
+                        enviou, carimbadas com data e hora.
+                    </p>
+                    <span class="gaveta__ir">Abrir gaveta <span aria-hidden="true">→</span></span>
+                </a>
+
+                <a class="gaveta" href="formularios.html">
+                    <span class="gaveta__numero">VITRINE · PÚBLICA</span>
+                    <h2 class="gaveta__titulo">Responder</h2>
+                    <p class="gaveta__texto">
+                        Cada formulário publicado tem seu próprio link de resposta — abra a
+                        gaveta de formulários e use o atalho "↗" na ficha desejada.
+                    </p>
+                    <span class="gaveta__ir">Ver formulários <span aria-hidden="true">→</span></span>
+                </a>
+            </section>
+        </main>
+
+        <footer class="rodape">
+            Ateliê de Questionários — dados servidos por json-server.
+        </footer>
+    </div>
+</body>
+
+</html>

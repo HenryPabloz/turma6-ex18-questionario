@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Respostas — Ateliê de Questionários</title>
+  <meta name="description" content="Consulte as respostas recebidas por formulário: nome, e-mail, data de envio e cada resposta dada.">
+  <link rel="stylesheet" href="../CSS/estilo.css">
+</head>
+<body>
+  <a href="#conteudo-principal" class="pular-navegacao">Pular para o conteúdo principal</a>
+
+  <div class="pagina">
+    <header class="trilho-nav">
+      <a href="index.html" class="trilho-nav__marca">
+        <span class="trilho-nav__marca-selo">FICHÁRIO</span>
+        <span class="trilho-nav__marca-titulo">Ateliê de Questionários</span>
+      </a>
+      <nav aria-label="Navegação principal">
+        <ul class="trilho-nav__abas">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="perguntas.html">Perguntas</a></li>
+          <li><a href="formularios.html">Formulários</a></li>
+          <li><a href="respostas.html" aria-current="page">Respostas</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="conteudo-principal">
+      <div class="cabecalho-secao">
+        <div>
+          <span class="cabecalho-secao__eyebrow">Gaveta 03</span>
+          <h1>Registros de resposta</h1>
+          <p>Escolha um formulário para ver quem respondeu e o que cada pessoa disse.</p>
+        </div>
+      </div>
+
+      <div class="barra-ferramentas">
+        <label for="select-formulario-respostas" class="sr-only">Selecionar formulário</label>
+        <!-- As opções são preenchidas dinamicamente por respostas.js a partir de /formularios -->
+        <select id="select-formulario-respostas" name="select-formulario-respostas" class="selecao"></select>
+
+        <label for="busca-respostas" class="sr-only">Buscar por nome ou e-mail</label>
+        <input type="search" id="busca-respostas" name="busca-respostas" class="entrada" placeholder="Buscar por nome ou e-mail…" autocomplete="off">
+      </div>
+
+      <p id="respostas-resumo" class="campo__ajuda"></p>
+
+      <!-- Container onde os registros (.registro) são renderizados dinamicamente por respostas.js -->
+      <div id="lista-respostas" aria-live="polite"></div>
+
+      <div id="respostas-vazio" class="estado-vazio" hidden>
+        <strong>Nenhuma resposta ainda</strong>
+        <p>Assim que alguém responder a este formulário, os registros aparecem aqui.</p>
+      </div>
+    </main>
+
+    <footer class="rodape">
+      Ateliê de Questionários — dados servidos por json-server.
+    </footer>
+  </div>
+
+  <script src="../JS/utils.js"></script>
+  <script src="../JS/respostas.js"></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulários — Ateliê de Questionários</title>
+  <meta name="description" content="Monte formulários a partir do banco de perguntas, defina vigência e status de publicação.">
+  <link rel="stylesheet" href="../CSS/estilo.css">
+</head>
+<body>
+  <a href="#conteudo-principal" class="pular-navegacao">Pular para o conteúdo principal</a>
+
+  <div class="pagina">
+    <header class="trilho-nav">
+      <a href="index.html" class="trilho-nav__marca">
+        <span class="trilho-nav__marca-selo">FICHÁRIO</span>
+        <span class="trilho-nav__marca-titulo">Ateliê de Questionários</span>
+      </a>
+      <nav aria-label="Navegação principal">
+        <ul class="trilho-nav__abas">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="perguntas.html">Perguntas</a></li>
+          <li><a href="formularios.html" aria-current="page">Formulários</a></li>
+          <li><a href="respostas.html">Respostas</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="conteudo-principal">
+      <div class="cabecalho-secao">
+        <div>
+          <span class="cabecalho-secao__eyebrow">Gaveta 02</span>
+          <h1>Formulários</h1>
+          <p>Combine perguntas do banco, defina a vigência e publique quando estiver pronto.</p>
+        </div>
+        <button type="button" id="btn-novo-formulario" class="botao botao--primario">
+          <span aria-hidden="true">+</span> Novo formulário
+        </button>
+      </div>
+
+      <div class="barra-ferramentas">
+        <label for="busca-formularios" class="sr-only">Buscar formulário pelo título</label>
+        <input type="search" id="busca-formularios" name="busca-formularios" class="entrada" placeholder="Buscar pelo título…" autocomplete="off">
+
+        <label for="filtro-formularios-status" class="sr-only">Filtrar por status</label>
+        <select id="filtro-formularios-status" name="filtro-formularios-status" class="selecao">
+          <option value="">Todos os status</option>
+          <option value="rascunho">Rascunho</option>
+          <option value="publicado">Publicado</option>
+          <option value="encerrado">Encerrado</option>
+        </select>
+      </div>
+
+      <!-- Container onde os cartões de formulário são renderizados dinamicamente por formularios.js -->
+      <div id="lista-formularios" class="grade-fichas" aria-live="polite"></div>
+
+      <div id="formularios-vazio" class="estado-vazio" hidden>
+        <strong>Nenhum formulário encontrado</strong>
+        <p>Ajuste a busca ou o filtro, ou monte um novo formulário.</p>
+      </div>
+    </main>
+
+    <footer class="rodape">
+      Ateliê de Questionários — dados servidos por json-server.
+    </footer>
+  </div>
+
+  <!-- ==================== MODAL: CRIAR/EDITAR FORMULÁRIO ==================== -->
+  <dialog id="modal-formulario" class="modal" aria-labelledby="modal-formulario-titulo">
+    <form id="form-formulario" method="dialog" novalidate>
+      <input type="hidden" id="formulario-id" name="formulario-id" value="">
+
+      <div class="modal__cabecalho">
+        <h2 class="modal__titulo" id="modal-formulario-titulo">Novo formulário</h2>
+        <button type="button" id="btn-fechar-modal-formulario" class="modal__fechar" aria-label="Fechar formulário de montagem">✕</button>
+      </div>
+
+      <div class="modal__corpo">
+        <div class="campo">
+          <label class="campo__rotulo" for="formulario-titulo">
+            Título <span class="campo__obrigatorio" aria-hidden="true">*</span>
+          </label>
+          <input type="text" id="formulario-titulo" name="formulario-titulo" class="entrada" required aria-required="true" placeholder="Ex.: Pesquisa de satisfação — Turma 7">
+          <span class="campo__erro" id="erro-formulario-titulo"></span>
+        </div>
+
+        <div class="campo">
+          <label class="campo__rotulo" for="formulario-descricao">Descrição</label>
+          <textarea id="formulario-descricao" name="formulario-descricao" class="area-texto" rows="2" placeholder="Ex.: Avalie sua experiência com o nosso curso."></textarea>
+          <span class="campo__ajuda">Campo opcional.</span>
+        </div>
+
+        <div class="campo">
+          <label class="campo__rotulo" for="formulario-status-select">Status</label>
+          <select id="formulario-status-select" name="formulario-status" class="selecao">
+            <option value="rascunho">Rascunho — pode ser editado livremente</option>
+            <option value="publicado">Publicado — visível na tela pública</option>
+            <option value="encerrado">Encerrado — não recebe novas respostas</option>
+          </select>
+        </div>
+
+        <fieldset class="campo-grupo">
+          <legend>Vigência <span class="campo__ajuda">(opcional)</span></legend>
+          <div class="campo">
+            <label class="campo__rotulo" for="formulario-data-inicio">Início</label>
+            <input type="date" id="formulario-data-inicio" name="formulario-data-inicio" class="entrada">
+          </div>
+          <div class="campo campo--sem-margem">
+            <label class="campo__rotulo" for="formulario-data-fim">Fim</label>
+            <input type="date" id="formulario-data-fim" name="formulario-data-fim" class="entrada">
+          </div>
+        </fieldset>
+
+        <fieldset class="campo-grupo">
+          <legend>Perguntas do banco <span class="campo__obrigatorio" aria-hidden="true">*</span> <span class="campo__ajuda">(selecione ao menos 1)</span></legend>
+
+          <label for="busca-perguntas-disponiveis" class="sr-only">Buscar pergunta para adicionar ao formulário</label>
+          <input type="search" id="busca-perguntas-disponiveis" name="busca-perguntas-disponiveis" class="entrada campo--espacado" placeholder="Buscar no banco de perguntas…" autocomplete="off">
+
+          <!-- Cada opção representa uma pergunta do banco; formularios.js preenche isto a partir de /perguntas -->
+          <div id="formulario-perguntas-disponiveis" class="selecionavel" role="group" aria-label="Perguntas disponíveis para seleção"></div>
+          <span class="campo__erro" id="erro-formulario-perguntas"></span>
+        </fieldset>
+      </div>
+
+      <div class="modal__rodape">
+        <button type="button" id="btn-cancelar-formulario" class="botao botao--secundario">Cancelar</button>
+        <button type="submit" id="btn-salvar-formulario" class="botao botao--primario">Salvar formulário</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ==================== MODAL: CONFIRMAR EXCLUSÃO / ENCERRAMENTO ==================== -->
+  <dialog id="modal-confirmar-exclusao-formulario" class="modal" aria-labelledby="modal-exclusao-formulario-titulo">
+    <div class="modal__cabecalho">
+      <h2 class="modal__titulo" id="modal-exclusao-formulario-titulo">Excluir ou encerrar formulário?</h2>
+      <button type="button" id="btn-fechar-modal-exclusao-formulario" class="modal__fechar" aria-label="Fechar confirmação">✕</button>
+    </div>
+    <div class="modal__corpo">
+      <p id="texto-confirmar-exclusao-formulario">Formulários com respostas vinculadas não podem ser excluídos fisicamente — apenas encerrados, preservando o histórico de respostas.</p>
+    </div>
+    <div class="modal__rodape">
+      <button type="button" id="btn-cancelar-exclusao-formulario" class="botao botao--secundario">Cancelar</button>
+      <button type="button" id="btn-confirmar-exclusao-formulario" class="botao botao--perigo">Confirmar</button>
+    </div>
+  </dialog>
+
+  <!-- ==================== MODAL: CONFIRMAR CRIAÇÃO/EDIÇÃO ==================== -->
+  <dialog id="modal-confirmar-salvar-formulario" class="modal" aria-labelledby="modal-confirmar-salvar-formulario-titulo">
+    <div class="modal__cabecalho">
+      <h2 class="modal__titulo" id="modal-confirmar-salvar-formulario-titulo">Confirmar</h2>
+      <button type="button" id="btn-fechar-modal-confirmar-salvar-formulario" class="modal__fechar" aria-label="Fechar confirmação">✕</button>
+    </div>
+    <div class="modal__corpo">
+      <p id="texto-confirmar-salvar-formulario"></p>
+    </div>
+    <div class="modal__rodape">
+      <button type="button" id="btn-cancelar-salvar-formulario" class="botao botao--secundario">Voltar e revisar</button>
+      <button type="button" id="btn-confirmar-salvar-formulario" class="botao botao--primario">Confirmar</button>
+    </div>
+  </dialog>
+
+  <script src="../JS/utils.js"></script>
+  <script src="../JS/formularios.js"></script>
+</body>
+</html>

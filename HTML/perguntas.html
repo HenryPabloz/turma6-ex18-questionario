@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banco de Perguntas — Ateliê de Questionários</title>
+  <meta name="description" content="Cadastre, edite e organize as perguntas reutilizáveis do sistema de questionários.">
+  <link rel="stylesheet" href="../CSS/estilo.css">
+</head>
+<body>
+  <a href="#conteudo-principal" class="pular-navegacao">Pular para o conteúdo principal</a>
+
+  <div class="pagina">
+    <header class="trilho-nav">
+      <a href="index.html" class="trilho-nav__marca">
+        <span class="trilho-nav__marca-selo">FICHÁRIO</span>
+        <span class="trilho-nav__marca-titulo">Ateliê de Questionários</span>
+      </a>
+      <nav aria-label="Navegação principal">
+        <ul class="trilho-nav__abas">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="perguntas.html" aria-current="page">Perguntas</a></li>
+          <li><a href="formularios.html">Formulários</a></li>
+          <li><a href="respostas.html">Respostas</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="conteudo-principal">
+      <div class="cabecalho-secao">
+        <div>
+          <span class="cabecalho-secao__eyebrow">Gaveta 01</span>
+          <h1>Banco de perguntas</h1>
+          <p>Cada ficha abaixo é uma pergunta reutilizável — pronta para compor um ou mais formulários.</p>
+        </div>
+        <button type="button" id="btn-nova-pergunta" class="botao botao--primario">
+          <span aria-hidden="true">+</span> Nova pergunta
+        </button>
+      </div>
+
+      <div class="barra-ferramentas">
+        <label for="busca-perguntas" class="sr-only">Buscar pergunta pelo enunciado</label>
+        <input type="search" id="busca-perguntas" name="busca-perguntas" class="entrada" placeholder="Buscar pelo enunciado…" autocomplete="off">
+
+        <label for="filtro-perguntas-tipo" class="sr-only">Filtrar por tipo</label>
+        <select id="filtro-perguntas-tipo" name="filtro-perguntas-tipo" class="selecao">
+          <option value="">Todos os tipos</option>
+          <option value="multipla_escolha">Múltipla escolha</option>
+          <option value="checkbox">Checkbox</option>
+          <option value="texto_curto">Texto curto</option>
+          <option value="texto_longo">Texto longo</option>
+        </select>
+      </div>
+
+      <!-- Container onde os cartões de pergunta (.ficha) são renderizados dinamicamente por perguntas.js -->
+      <div id="lista-perguntas" class="grade-fichas" aria-live="polite"></div>
+
+      <!-- Estado vazio: exiba trocando o "hidden" quando a lista filtrada não tiver itens -->
+      <div id="perguntas-vazio" class="estado-vazio" hidden>
+        <strong>Nenhuma ficha encontrada</strong>
+        <p>Ajuste a busca ou o filtro, ou cadastre uma nova pergunta.</p>
+      </div>
+    </main>
+
+    <footer class="rodape">
+      Ateliê de Questionários — dados servidos por json-server.
+    </footer>
+  </div>
+
+  <!-- ==================== MODAL: CRIAR/EDITAR PERGUNTA ==================== -->
+  <dialog id="modal-pergunta" class="modal" aria-labelledby="modal-pergunta-titulo">
+    <form id="form-pergunta" method="dialog" novalidate>
+      <input type="hidden" id="pergunta-id" name="pergunta-id" value="">
+
+      <div class="modal__cabecalho">
+        <h2 class="modal__titulo" id="modal-pergunta-titulo">Nova pergunta</h2>
+        <button type="button" id="btn-fechar-modal-pergunta" class="modal__fechar" aria-label="Fechar formulário de pergunta">✕</button>
+      </div>
+
+      <div class="modal__corpo">
+        <div class="campo">
+          <label class="campo__rotulo" for="pergunta-enunciado">
+            Enunciado <span class="campo__obrigatorio" aria-hidden="true">*</span>
+          </label>
+          <textarea id="pergunta-enunciado" name="pergunta-enunciado" class="area-texto" rows="2" required aria-required="true" placeholder="Ex.: Qual sua linguagem de programação favorita?"></textarea>
+          <span class="campo__erro" id="erro-pergunta-enunciado"></span>
+        </div>
+
+        <div class="campo">
+          <label class="campo__rotulo" for="pergunta-tipo-select">
+            Tipo de pergunta <span class="campo__obrigatorio" aria-hidden="true">*</span>
+          </label>
+          <select id="pergunta-tipo-select" name="pergunta-tipo" class="selecao" required aria-required="true">
+            <option value="" disabled selected>Selecione um tipo…</option>
+            <option value="multipla_escolha">Múltipla escolha (uma resposta)</option>
+            <option value="checkbox">Checkbox (múltiplas respostas)</option>
+            <option value="texto_curto">Texto curto (até 200 caracteres)</option>
+            <option value="texto_longo">Texto longo (sem limite)</option>
+          </select>
+          <span class="campo__ajuda">Múltipla escolha e checkbox exigem alternativas cadastradas abaixo.</span>
+        </div>
+
+        <!-- Exiba/oculte este bloco via JS conforme o tipo selecionado acima -->
+        <fieldset class="campo-grupo" id="pergunta-alternativas-container">
+          <legend>Alternativas <span class="campo__ajuda">(múltipla escolha: 2–10 · checkbox: 3–15, sem repetição)</span></legend>
+
+          <div id="pergunta-alternativas-lista">
+            <div class="campo campo--alternativa" data-alternativa-index="0">
+              <input type="text" class="entrada alternativa-input" name="pergunta-alternativa[]" placeholder="Ex.: JavaScript" aria-label="Alternativa 1">
+              <button type="button" class="botao botao--fantasma btn-remover-alternativa" aria-label="Remover esta alternativa">✕</button>
+            </div>
+            <div class="campo campo--alternativa" data-alternativa-index="1">
+              <input type="text" class="entrada alternativa-input" name="pergunta-alternativa[]" placeholder="Ex.: Python" aria-label="Alternativa 2">
+              <button type="button" class="botao botao--fantasma btn-remover-alternativa" aria-label="Remover esta alternativa">✕</button>
+            </div>
+          </div>
+
+          <button type="button" id="btn-add-alternativa" class="botao botao--secundario botao--pequeno">
+            <span aria-hidden="true">+</span> Adicionar alternativa
+          </button>
+          <span class="campo__erro" id="erro-pergunta-alternativas"></span>
+        </fieldset>
+
+        <div class="opcao opcao--rasa">
+          <input type="checkbox" id="pergunta-obrigatoria" name="pergunta-obrigatoria">
+          <label class="opcao__texto" for="pergunta-obrigatoria">Esta pergunta é obrigatória ao responder</label>
+        </div>
+      </div>
+
+      <div class="modal__rodape">
+        <button type="button" id="btn-cancelar-pergunta" class="botao botao--secundario">Cancelar</button>
+        <button type="submit" id="btn-salvar-pergunta" class="botao botao--primario">Salvar pergunta</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ==================== MODAL: CONFIRMAR EXCLUSÃO ==================== -->
+  <dialog id="modal-confirmar-exclusao-pergunta" class="modal" aria-labelledby="modal-exclusao-titulo">
+    <div class="modal__cabecalho">
+      <h2 class="modal__titulo" id="modal-exclusao-titulo">Excluir pergunta?</h2>
+      <button type="button" id="btn-fechar-modal-exclusao-pergunta" class="modal__fechar" aria-label="Fechar confirmação">✕</button>
+    </div>
+    <div class="modal__corpo">
+      <p>Se esta pergunta já tiver respostas vinculadas em algum formulário, a exclusão física deve ser bloqueada — oriente o usuário a manter o histórico.</p>
+    </div>
+    <div class="modal__rodape">
+      <button type="button" id="btn-cancelar-exclusao-pergunta" class="botao botao--secundario">Cancelar</button>
+      <button type="button" id="btn-confirmar-exclusao-pergunta" class="botao botao--perigo">Excluir definitivamente</button>
+    </div>
+  </dialog>
+
+  <!-- ==================== MODAL: CONFIRMAR CRIAÇÃO/EDIÇÃO ==================== -->
+  <dialog id="modal-confirmar-salvar-pergunta" class="modal" aria-labelledby="modal-confirmar-salvar-pergunta-titulo">
+    <div class="modal__cabecalho">
+      <h2 class="modal__titulo" id="modal-confirmar-salvar-pergunta-titulo">Confirmar</h2>
+      <button type="button" id="btn-fechar-modal-confirmar-salvar-pergunta" class="modal__fechar" aria-label="Fechar confirmação">✕</button>
+    </div>
+    <div class="modal__corpo">
+      <p id="texto-confirmar-salvar-pergunta"></p>
+    </div>
+    <div class="modal__rodape">
+      <button type="button" id="btn-cancelar-salvar-pergunta" class="botao botao--secundario">Voltar e revisar</button>
+      <button type="button" id="btn-confirmar-salvar-pergunta" class="botao botao--primario">Confirmar</button>
+    </div>
+  </dialog>
+  <script src="../JS/utils.js"></script>
+  <script src="../JS/perguntas.js"></script>
+</body>
+</html>
